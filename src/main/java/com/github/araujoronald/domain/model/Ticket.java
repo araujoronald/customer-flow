@@ -14,20 +14,21 @@ public class Ticket {
     @NotNull Date created;
     Date start;
     Date end;
-    @NotNull User user;
+    @NotNull
+    Customer customer;
     @NotNull Attendant attendant;
 
-    private Ticket(UUID id, TicketStatus status, Integer priority, Date created, User user, Attendant attendant){
+    private Ticket(UUID id, TicketStatus status, Integer priority, Date created, Customer customer, Attendant attendant){
         this.id = id;
         this.status = status;
         this.priority = priority;
         this.created = created;
-        this.user = user;
+        this.customer = customer;
         this.attendant = attendant;
     }
 
-    public static Ticket create(TicketStatus status, Integer priority, User user, Attendant attendant){
-        return new Ticket(UUID.randomUUID(), status, priority, new Date(), user, attendant);
+    public static Ticket create(TicketStatus status, Integer priority, Customer customer, Attendant attendant){
+        return new Ticket(UUID.randomUUID(), status, priority, new Date(), customer, attendant);
     }
 
     public void start(){

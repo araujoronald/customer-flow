@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.text.MessageFormat;
-import java.util.Date;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,12 +16,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ValidatorExtension.class)
 class TicketTest {
 
-    private User user;
+    private Customer customer;
     private Attendant attendant;
 
     @BeforeEach
     void setUp() {
-        user = User.create("Test User", "user@test.com", "+1234567890", UserQualifier.DEFAULT);
+        customer = Customer.create("Test User", "user@test.com", "+1234567890", CustomerQualifier.DEFAULT);
         attendant = Attendant.create("Test Attendant", "attendant@test.com");
     }
 
@@ -30,7 +29,7 @@ class TicketTest {
     @DisplayName("Should create a valid ticket with no constraint violations")
     void shouldCreateValidTicket(Validator validator) {
         // When
-        Ticket ticket = Ticket.create(TicketStatus.PENDING, 10, user, attendant);
+        Ticket ticket = Ticket.create(TicketStatus.PENDING, 10, customer, attendant);
         Set<ConstraintViolation<Ticket>> violations = validator.validate(ticket);
 
         // Then
@@ -43,7 +42,7 @@ class TicketTest {
     @DisplayName("Should have violation for negative priority")
     void shouldHaveViolationForNegativePriority(Validator validator) {
         // When
-        Ticket ticket = Ticket.create(TicketStatus.PENDING, -1, user, attendant);
+        Ticket ticket = Ticket.create(TicketStatus.PENDING, -1, customer, attendant);
         Set<ConstraintViolation<Ticket>> violations = validator.validate(ticket);
 
         // Then
@@ -63,7 +62,7 @@ class TicketTest {
         assertEquals(4, violations.size());
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("status")));
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("priority")));
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("user")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("customer")));
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("attendant")));
     }
 
@@ -73,14 +72,14 @@ class TicketTest {
     @DisplayName("Should throw exception when starting a non-pending ticket")
     void shouldThrowExceptionWhenStartingNonPendingTicket() {
         // Given
-        Ticket inProgressTicket = Ticket.create(TicketStatus.PENDING, 5, user, attendant);
+        Ticket inProgressTicket = Ticket.create(TicketStatus.PENDING, 5, customer, attendant);
         inProgressTicket.start(); // now IN_PROGRESS
 
-        Ticket completedTicket = Ticket.create(TicketStatus.PENDING, 5, user, attendant);
+        Ticket completedTicket = Ticket.create(TicketStatus.PENDING, 5, customer, attendant);
         completedTicket.start();
         completedTicket.complete(); // now COMPLETED
 
-        Ticket cancelledTicket = Ticket.create(TicketStatus.PENDING, 5, user, attendant);
+        Ticket cancelledTicket = Ticket.create(TicketStatus.PENDING, 5, customer, attendant);
         cancelledTicket.cancel(); // now CANCELLED
 
         // Then
@@ -96,7 +95,7 @@ class TicketTest {
     @DisplayName("Should throw exception when completing a ticket that is not in progress")
     void shouldThrowExceptionWhenCompletingNonInProgressTicket() {
         // Given
-        Ticket pendingTicket = Ticket.create(TicketStatus.PENDING, 5, user, attendant);
+        Ticket pendingTicket = Ticket.create(TicketStatus.PENDING, 5, customer, attendant);
 
         // Then
         var exception = assertThrows(IllegalStateException.class, pendingTicket::complete);
@@ -107,7 +106,7 @@ class TicketTest {
     @DisplayName("Should throw exception when cancelling a completed ticket")
     void shouldThrowExceptionWhenCancellingCompletedTicket() {
         // Given
-        Ticket completedTicket = Ticket.create(TicketStatus.PENDING, 5, user, attendant);
+        Ticket completedTicket = Ticket.create(TicketStatus.PENDING, 5, customer, attendant);
         completedTicket.start();
         completedTicket.complete();
 
@@ -121,7 +120,7 @@ class TicketTest {
     @DisplayName("Should throw exception when cancelling an already cancelled ticket")
     void shouldThrowExceptionWhenCancellingCancelledTicket() {
         // Given
-        Ticket cancelledTicket = Ticket.create(TicketStatus.PENDING, 5, user, attendant);
+        Ticket cancelledTicket = Ticket.create(TicketStatus.PENDING, 5, customer, attendant);
         cancelledTicket.cancel();
 
         // Then

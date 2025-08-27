@@ -1,17 +1,16 @@
 package com.github.araujoronald.domain.model;
 
 import javax.validation.constraints.*;
-import java.util.Objects;
 import java.util.UUID;
 
-public record User(
+public record Customer(
         @NotNull UUID id,
         @NotBlank @Size(min = 3) String name,
         @Email String email,
         @NotBlank @InternationalPhone String phone,
-        @NotNull UserQualifier qualifier) {
+        @NotNull CustomerQualifier qualifier) {
 
-    public static User create(String name, String email, String phone, UserQualifier qualifier){
-        return new User(UUID.randomUUID(), name, email, phone, qualifier);
+    public static Customer create(String name, String email, String phone, CustomerQualifier qualifier){
+        return new Customer(UUID.randomUUID(), name, email, phone, qualifier);
     }
 }

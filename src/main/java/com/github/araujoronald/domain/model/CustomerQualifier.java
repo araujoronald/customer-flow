@@ -1,6 +1,6 @@
 package com.github.araujoronald.domain.model;
 
-public enum UserQualifier {
+public enum CustomerQualifier {
     DEFAULT,
     VIP,
     EXPRESS
