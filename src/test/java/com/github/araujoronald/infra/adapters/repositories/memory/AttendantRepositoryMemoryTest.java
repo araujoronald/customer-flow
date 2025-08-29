@@ -1,4 +1,4 @@
-package com.github.araujoronald.infra.adapters.repositories;
+package com.github.araujoronald.infra.adapters.repositories.memory;
 
 import com.github.araujoronald.application.ports.AttendantRepository;
 import com.github.araujoronald.domain.model.Attendant;

@@ -1,4 +1,4 @@
-package com.github.araujoronald.infra.adapters.repositories;
+package com.github.araujoronald.infra.adapters.repositories.memory;
 
 import com.github.araujoronald.application.ports.TicketRepository;
 import com.github.araujoronald.domain.model.Ticket;

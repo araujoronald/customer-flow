@@ -1,4 +1,4 @@
-package com.github.araujoronald.infra.adapters.repositories;
+package com.github.araujoronald.infra.adapters.repositories.memory;
 
 import com.github.araujoronald.application.ports.TicketRepository;
 import com.github.araujoronald.domain.model.*;
@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
