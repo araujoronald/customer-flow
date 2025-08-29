@@ -1,5 +1,6 @@
 package com.github.araujoronald.application.useCases;
 
+import com.github.araujoronald.application.exceptions.CustomerAlreadyExistsException;
 import com.github.araujoronald.application.ports.CreateCustomer;
 import com.github.araujoronald.application.ports.CustomerRepository;
 import com.github.araujoronald.domain.model.Customer;
@@ -13,6 +14,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.text.MessageFormat;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -87,5 +90,24 @@ class CreateCustomerImplTest {
     void shouldThrowExceptionForNullInput() {
         // When & Then
         assertThrows(NullPointerException.class, () -> createCustomer.execute(null));
+    }
+
+    @Test
+    @DisplayName("Should throw CustomerAlreadyExistsException when email is already in use")
+    void shouldThrowExceptionWhenEmailExists() {
+        // Given
+        var input = new CreateCustomer.Input("John Doe", "john.doe@example.com", "+15551234567", CustomerQualifier.VIP);
+        Customer existingCustomer = Customer.create("Another John", "john.doe@example.com", "+1999888777", CustomerQualifier.DEFAULT);
+
+        when(customerRepository.findByEmail(input.email())).thenReturn(Optional.of(existingCustomer));
+
+        // When & Then
+        CustomerAlreadyExistsException exception = assertThrows(
+                CustomerAlreadyExistsException.class,
+                () -> createCustomer.execute(input)
+        );
+
+        String expectedMessage = MessageFormat.format("customer.already.exists", input.email());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 }

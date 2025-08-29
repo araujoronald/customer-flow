@@ -14,6 +14,8 @@ public class Ticket {
     @NotNull Date created;
     Date start;
     Date end;
+    String description;
+    String cancellationReason;
     @NotNull
     Customer customer;
     @NotNull Attendant attendant;
@@ -29,6 +31,26 @@ public class Ticket {
 
     public static Ticket create(TicketStatus status, Integer priority, Customer customer, Attendant attendant){
         return new Ticket(UUID.randomUUID(), status, priority, new Date(), customer, attendant);
+    }
+
+    public void assignTo(Attendant attendant) {
+        this.attendant = attendant;
+    }
+
+    public void addDescription(String description) {
+        this.description = description;
+    }
+
+    public void addCancellationReason(String reason) {
+        this.cancellationReason = reason;
+    }
+
+    public boolean updatePriority(int newPriority) {
+        if (newPriority > this.priority) {
+            this.priority = newPriority;
+            return true;
+        }
+        return false;
     }
 
     public void start(){
@@ -53,5 +75,45 @@ public class Ticket {
             throw new IllegalStateException(message);
         }
         this.status = TicketStatus.CANCELLED;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public TicketStatus getStatus() {
+        return status;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public Date getStart() {
+        return start;
+    }
+
+    public Date getEnd() {
+        return end;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public Attendant getAttendant() {
+        return attendant;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public String getCancellationReason() {
+        return cancellationReason;
     }
 }
