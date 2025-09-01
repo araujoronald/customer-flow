@@ -18,10 +18,7 @@ public class UpdateAttendantImpl implements UpdateAttendant {
     @Override
     public Output execute(Input input) {
         Attendant existingAttendant = repository.find(input.attendantId())
-                .orElseThrow(() -> {
-                    String message = MessageFormat.format("attendant.not.found", input.attendantId());
-                    return new AttendantNotFoundException(message);
-                });
+                .orElseThrow(() -> new AttendantNotFoundException("attendant.not.found", input.attendantId()));
 
         Attendant updatedAttendant = new Attendant(
                 existingAttendant.id(),

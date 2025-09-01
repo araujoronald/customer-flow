@@ -1,6 +1,7 @@
 package com.github.araujoronald.domain.model;
 
 import com.github.araujoronald.ValidatorExtension;
+import com.github.araujoronald.application.exceptions.TicketInvalidStateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,11 +84,11 @@ class TicketTest {
         cancelledTicket.cancel(); // now CANCELLED
 
         // Then
-        var exInProgress = assertThrows(IllegalStateException.class, inProgressTicket::start);
+        var exInProgress = assertThrows(TicketInvalidStateException.class, inProgressTicket::start);
         assertEquals("ticket.start.invalid.state", exInProgress.getMessage());
-        var exCompleted = assertThrows(IllegalStateException.class, completedTicket::start);
+        var exCompleted = assertThrows(TicketInvalidStateException.class, completedTicket::start);
         assertEquals("ticket.start.invalid.state", exCompleted.getMessage());
-        var exCancelled = assertThrows(IllegalStateException.class, cancelledTicket::start);
+        var exCancelled = assertThrows(TicketInvalidStateException.class, cancelledTicket::start);
         assertEquals("ticket.start.invalid.state", exCancelled.getMessage());
     }
 
@@ -98,7 +99,7 @@ class TicketTest {
         Ticket pendingTicket = Ticket.create(TicketStatus.PENDING, 5, customer, attendant);
 
         // Then
-        var exception = assertThrows(IllegalStateException.class, pendingTicket::complete);
+        var exception = assertThrows(TicketInvalidStateException.class, pendingTicket::complete);
         assertEquals("ticket.complete.invalid.state", exception.getMessage());
     }
 
@@ -111,7 +112,7 @@ class TicketTest {
         completedTicket.complete();
 
         // Then
-        var exception = assertThrows(IllegalStateException.class, completedTicket::cancel);
+        var exception = assertThrows(TicketInvalidStateException.class, completedTicket::cancel);
         String expectedMessage = MessageFormat.format("ticket.cancel.invalid.state", TicketStatus.COMPLETED);
         assertEquals(expectedMessage, exception.getMessage());
     }
@@ -124,7 +125,7 @@ class TicketTest {
         cancelledTicket.cancel();
 
         // Then
-        var exception = assertThrows(IllegalStateException.class, cancelledTicket::cancel);
+        var exception = assertThrows(TicketInvalidStateException.class, cancelledTicket::cancel);
         String expectedMessage = MessageFormat.format("ticket.cancel.invalid.state", TicketStatus.CANCELLED);
         assertEquals(expectedMessage, exception.getMessage());
     }

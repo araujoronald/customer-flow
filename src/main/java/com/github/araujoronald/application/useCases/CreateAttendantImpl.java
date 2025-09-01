@@ -20,8 +20,7 @@ public class CreateAttendantImpl implements CreateAttendant {
         Attendant attendant = Attendant.create(input.name(), input.email());
 
         repository.findByEmail(input.email()).ifPresent(a -> {
-            String message = MessageFormat.format("attendant.already.exists", a.email());
-            throw new AttendantAlreadyExistsException(message);
+            throw new AttendantAlreadyExistsException("attendant.already.exists", a.email());
         });
 
         final var attendantSaved = this.repository.save(attendant);

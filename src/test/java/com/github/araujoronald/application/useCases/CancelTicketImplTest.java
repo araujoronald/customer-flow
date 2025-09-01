@@ -1,5 +1,6 @@
 package com.github.araujoronald.application.useCases;
 
+import com.github.araujoronald.application.exceptions.TicketInvalidStateException;
 import com.github.araujoronald.application.exceptions.TicketNotFoundException;
 import com.github.araujoronald.application.ports.CancelTicket;
 import com.github.araujoronald.application.ports.TicketRepository;
@@ -95,7 +96,7 @@ class CancelTicketImplTest {
         when(ticketRepository.find(completedTicket.getId())).thenReturn(Optional.of(completedTicket));
 
         // When & Then
-        assertThrows(IllegalStateException.class, () -> cancelTicket.execute(input));
+        assertThrows(TicketInvalidStateException.class, () -> cancelTicket.execute(input));
     }
 
     @Test

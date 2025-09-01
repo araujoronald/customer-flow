@@ -18,10 +18,7 @@ public class UpdateCustomerImpl implements UpdateCustomer {
     @Override
     public Output execute(Input input) {
         Customer existingCustomer = repository.find(input.customerId())
-                .orElseThrow(() -> {
-                    String message = MessageFormat.format("customer.not.found", input.customerId());
-                    return new CustomerNotFoundException(message);
-                });
+                .orElseThrow(() -> new CustomerNotFoundException("customer.not.found", input.customerId()));
 
         Customer updatedCustomer = new Customer(
                 existingCustomer.id(),

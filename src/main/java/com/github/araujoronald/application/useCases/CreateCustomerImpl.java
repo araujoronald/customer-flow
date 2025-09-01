@@ -19,8 +19,7 @@ public class CreateCustomerImpl implements CreateCustomer {
         Customer customer = Customer.create(input.name(), input.email(), input.phone(), input.qualifier());
 
         repository.findByEmail(input.email()).ifPresent(c -> {
-            String message = MessageFormat.format("customer.already.exists", c.email());
-            throw new CustomerAlreadyExistsException(message);
+            throw new CustomerAlreadyExistsException("customer.already.exists", c.email());
         });
 
         final var customerSaved = this.repository.save(customer);

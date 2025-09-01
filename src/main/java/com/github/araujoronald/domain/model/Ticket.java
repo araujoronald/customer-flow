@@ -1,9 +1,10 @@
 package com.github.araujoronald.domain.model;
 
+import com.github.araujoronald.application.exceptions.TicketInvalidStateException;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.text.MessageFormat;
 import java.util.UUID;
 
 public class Ticket {
@@ -55,7 +56,7 @@ public class Ticket {
 
     public void start(){
         if (this.status != TicketStatus.PENDING) {
-            throw new IllegalStateException("ticket.start.invalid.state");
+            throw new TicketInvalidStateException("ticket.start.invalid.state");
         }
         this.start = new Date();
         this.status = TicketStatus.IN_PROGRESS;
@@ -63,7 +64,7 @@ public class Ticket {
 
     public void complete(){
         if (this.status != TicketStatus.IN_PROGRESS) {
-            throw new IllegalStateException("ticket.complete.invalid.state");
+            throw new TicketInvalidStateException("ticket.complete.invalid.state");
         }
         this.end = new Date();
         this.status = TicketStatus.COMPLETED;
@@ -71,8 +72,7 @@ public class Ticket {
 
     public void cancel(){
         if (this.status == TicketStatus.COMPLETED || this.status == TicketStatus.CANCELLED) {
-            String message = MessageFormat.format("ticket.cancel.invalid.state", this.status);
-            throw new IllegalStateException(message);
+            throw new TicketInvalidStateException("ticket.cancel.invalid.state", this.status);
         }
         this.status = TicketStatus.CANCELLED;
     }

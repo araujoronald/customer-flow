@@ -1,6 +1,7 @@
 package com.github.araujoronald.application.useCases;
 
 import com.github.araujoronald.application.exceptions.TicketAttendantMismatchException;
+import com.github.araujoronald.application.exceptions.TicketInvalidStateException;
 import com.github.araujoronald.application.exceptions.TicketNotFoundException;
 import com.github.araujoronald.application.ports.CompleteService;
 import com.github.araujoronald.application.ports.TicketRepository;
@@ -78,7 +79,7 @@ class CompleteServiceImplTest {
         when(ticketRepository.find(pendingTicket.getId())).thenReturn(Optional.of(pendingTicket));
 
         // When & Then
-        assertThrows(IllegalStateException.class, () -> completeService.execute(input));
+        assertThrows(TicketInvalidStateException.class, () -> completeService.execute(input));
     }
 
     @Test
