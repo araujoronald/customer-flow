@@ -1,0 +1,25 @@
+version: '3.8'
+
+  services:
+    app:
+      build: .
+      container_name: customer-flow-app
+      ports:
+        - "8080:8080"
+      environment:
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/customer_flow_db
+        - SPRING_DATASOURCE_USERNAME=postgres
+        - SPRING_DATASOURCE_PASSWORD=secret
+      depends_on:
+        - postgres-db
+
+    postgres-db:
+      image: postgres:15-alpine
+      container_name: customer-flow-db
+      environment:
+        - POSTGRES_DB=customer_flow_db
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=secret
+      ports:
+        - "5432:5432"
+      volumes:
